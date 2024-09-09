@@ -63,6 +63,10 @@ public class StackController
                 ShowStacks();
                 break;
 
+            case "V":
+                FlashcardController.ViewFlashcardsInStack(stack);
+                break;
+
             default:
                 Console.WriteLine("Please choose an option from the menu");
                 break;

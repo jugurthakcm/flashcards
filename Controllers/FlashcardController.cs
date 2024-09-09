@@ -4,6 +4,8 @@ public class FlashcardController
 {
     public static void ViewFlashcardsInStack(string stack)
     {
+        Console.Clear();
+
         var table = new Table();
 
         table.Title(stack);
@@ -32,12 +34,36 @@ public class FlashcardController
             }
         } while (string.IsNullOrEmpty(input));
 
-        ViewOneFlashcard(input);
+        // input is the ID of the flashcard
+        ViewOneFlashcard(input, stack);
     }
 
-    public static void ViewOneFlashcard(string Id){
-        
+    public static void ViewOneFlashcard(string Id, string stack)
+    {
+        Console.Clear();
+
+        var table = new Table();
+
+        table.AddColumn("Front");
+
+        table.AddRow("Adios");
+
+                AnsiConsole.Write(table);
+
+
+        Console.WriteLine("\n\nInput your answer to this card or 0 to exit");
+
+        string? input;
+
+        do
+        {
+            input = Console.ReadLine()?.Trim();
+            if (input == "0")
+            {
+                ViewFlashcardsInStack(stack);
+            }
+        } while (string.IsNullOrEmpty(input));
+
+        Console.WriteLine("Your answer was wrong");
     }
-
-
 }
