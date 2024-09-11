@@ -84,3 +84,5 @@ yarn-error.log*
 App.config
 
 *.db
+*.mdf
+*.ldf
