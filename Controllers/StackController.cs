@@ -18,11 +18,11 @@ public class StackController
         using (var connection = new SqlConnection(Variables.defaultConnection))
         {
             var sql = "SELECT * FROM Stacks";
-            IEnumerable<Stack> stacks = connection.Query<Stack>(sql);
+            IEnumerable<StackDto> stacks = connection.Query<StackDto>(sql);
 
             if (stacks.Any())
             {
-                foreach (Stack s in stacks)
+                foreach (StackDto s in stacks)
                 {
                     table.AddRow(s.Name);
                 }
