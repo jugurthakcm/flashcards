@@ -1,3 +1,7 @@
+using Dapper;
+using flashcards;
+using Microsoft.Data.SqlClient;
+using Models;
 using Spectre.Console;
 
 public class StackController
@@ -11,14 +15,26 @@ public class StackController
         table.AddColumn("Name");
 
         // Use a loop to loop through the list of stacks
-        table.AddRow("Portuguese");
-        table.AddRow("Spanish");
-        table.AddRow("French");
+        using (var connection = new SqlConnection(Variables.defaultConnection))
+        {
+            var sql = "SELECT * FROM Stacks";
+            IEnumerable<Stack> stacks = connection.Query<Stack>(sql);
+
+            if (stacks.Any())
+            {
+                foreach (Stack s in stacks)
+                {
+                    table.AddRow(s.Name);
+                }
+            }
+        }
 
         // Output table
         AnsiConsole.Write(table);
 
         Console.WriteLine("\n\nChoose a stack of flashcards to interact with, or input 0 to exit:");
+
+        Console.WriteLine("If the name doesn't exit, a new stack will get created");
 
         string? input;
 
@@ -31,7 +47,20 @@ public class StackController
             }
         } while (string.IsNullOrEmpty(input));
 
-        CurrentStack(input);
+        // Check if stack input exists or create one and selects it
+        using (var connection = new SqlConnection(Variables.defaultConnection))
+        {
+            var sql = $"SELECT * FROM Stacks where Name = '{input}'";
+            var stack = connection.QuerySingleOrDefault(sql);
+
+            if (stack == null)
+            {
+                sql = $"INSERT INTO Stacks (Name) VALUES ('{input}')";
+                connection.Execute(sql);
+            }
+
+            CurrentStack(input);
+        }
     }
 
     public static void CurrentStack(string stack)
