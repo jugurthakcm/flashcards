@@ -5,6 +5,7 @@ using System.Configuration;
 using Dapper;
 using flashcards;
 using Microsoft.Data.SqlClient;
+using Models;
 
 using (var connection = new SqlConnection(Variables.defaultConnection))
 {
@@ -39,5 +40,7 @@ using (var connection = new SqlConnection(Variables.defaultConnection))
         connection.Execute(sql);
         */
 }
+
+
 
 Menu.ShowMenu();

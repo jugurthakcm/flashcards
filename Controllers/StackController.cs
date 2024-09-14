@@ -18,11 +18,11 @@ public class StackController
         using (var connection = new SqlConnection(Variables.defaultConnection))
         {
             var sql = "SELECT * FROM Stacks";
-            IEnumerable<StackDto> stacks = connection.Query<StackDto>(sql);
+            IEnumerable<Stack> stacks = connection.Query<Stack>(sql);
 
             if (stacks.Any())
             {
-                foreach (StackDto s in stacks)
+                foreach (Stack s in stacks)
                 {
                     table.AddRow(s.Name);
                 }
@@ -96,6 +96,9 @@ public class StackController
                 FlashcardController.ViewFlashcardsInStack(stack);
                 break;
 
+            case "C":
+                FlashcardController.CreateFlashcardsInStack(stack);
+                break;
             default:
                 Console.WriteLine("Please choose an option from the menu");
                 break;

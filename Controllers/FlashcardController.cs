@@ -1,3 +1,6 @@
+using Dapper;
+using flashcards;
+using Microsoft.Data.SqlClient;
 using Spectre.Console;
 
 public class FlashcardController
@@ -48,8 +51,7 @@ public class FlashcardController
 
         table.AddRow("Adios");
 
-                AnsiConsole.Write(table);
-
+        AnsiConsole.Write(table);
 
         Console.WriteLine("\n\nInput your answer to this card or 0 to exit");
 
@@ -65,5 +67,31 @@ public class FlashcardController
         } while (string.IsNullOrEmpty(input));
 
         Console.WriteLine("Your answer was wrong");
+    }
+
+    public static void CreateFlashcardsInStack(string stackName)
+    {
+        Console.Clear();
+
+        Console.Write("Input the front of the card: ");
+        string front = Console.ReadLine();
+
+        Console.Write("Input the back of the card: ");
+        string back = Console.ReadLine();
+
+        using (var connection = new SqlConnection(Variables.defaultConnection))
+        {
+            var sql = $"SELECT * FROM Stacks where Name = '{stackName}'";
+            var stack = connection.QuerySingleOrDefault(sql);
+
+            if (stack != null)
+            {
+                sql =
+                    $"INSERT INTO Flashcards (Front, Back, StackId) VALUES ('{front}', '{back}',  '{stack.Id}')";
+                connection.Execute(sql);
+            }
+        }
+
+        StackController.CurrentStack(stackName);
     }
 }
